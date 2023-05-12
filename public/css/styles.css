@@ -1,0 +1,9 @@
+input[readonly] {
+    color: #6c757d;
+    background-color: #e9ecef;
+}
+
+input[readonly]:focus {
+    color: #6c757d;
+    background-color: #e9ecef;
+}

@@ -1,0 +1,117 @@
+<%- include("_header") -%>
+
+<h2>Find Customers</h2>
+
+<h3>Total number of records in the database: <%= totalRecords %></h3>
+
+<form action="/manage" method="POST">
+    <div class="form-group row mb-3">
+        <label for="cusid" class="col-sm-3 col-form-label">ID</label>
+        <div class="col-sm-3">
+            <input type="number" class="form-control" id="cusid" name="cusid" pattern="[0-9]+" value="<%= projCus.cusid %>">
+        </div>
+        <div class="col-sm-6 d-flex align-items-center">
+            <div>(equals)</div>
+        </div>
+    </div>
+    <div class="form-group row mb-3">
+        <label for="cusfname" class="col-sm-3 col-form-label">First Name</label>
+        <div class="col-sm-3">
+            <input type="text" class="form-control" id="cusfname" name="cusfname" value="<%= projCus.cusfname %>">
+        </div>
+        <div class="col-sm-6 d-flex align-items-center">
+            <div>(begins with)</div>
+        </div>
+    </div>
+    <div class="form-group row mb-3">
+        <label for="cuslname" class="col-sm-3 col-form-label">Last Name</label>
+        <div class="col-sm-3">
+            <input type="text" class="form-control" id="cuslname" name="cuslname" value="<%= projCus.cuslname %>">
+        </div>
+        <div class="col-sm-6 d-flex align-items-center">
+            <div>(begins with)</div>
+        </div>
+    </div>
+    <div class="form-group row mb-3">
+        <label for="cusstate" class="col-sm-3 col-form-label">State</label>
+        <div class="col-sm-3">
+            <input type="text" class="form-control" id="cusstate" name="cusstate" pattern="[A-Za-z]{2}"
+                title="Please enter a two-letter state abbreviation" value="<%= projCus.cusstate %>">
+        </div>
+        <div class="col-sm-6 d-flex align-items-center">
+            <div>(equals)</div>
+        </div>
+    </div>
+    <div class="form-group row mb-3">
+        <label for="cussalesytd" class="col-sm-3 col-form-label">Sales YTD</label>
+        <div class="col-sm-3">
+            <input type="text" class="form-control" id="cussalesytd" name="cussalesytd" pattern="[0-9]+" value="<%= projCus.cussalesytd %>">
+        </div>
+        <div class="col-sm-6 d-flex align-items-center">
+            <div>(greater than or equal to)</div>
+        </div>
+    </div>
+    <div class="form-group row mb-3">
+        <label for="cussalesprev" class="col-sm-3 col-form-label">Previous Years Sales</label>
+        <div class="col-sm-3">
+            <input type="text" class="form-control" id="cussalesprev" name="cussalesprev"
+                pattern="[0-9]+" value="<%= projCus.cussalesprev %>">
+        </div>
+        <div class="col-sm-6 d-flex align-items-center">
+            <div>(greater than or equal to)</div>
+        </div>
+    </div>
+    <div class="form-group row mb-3">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-4">
+            <button type="submit" class="btn btn-primary" id="findBtn">Find</button>
+            <button type="reset" class="btn btn-primary" id="resetBtn">Reset</button>
+        </div>
+    </div>
+</form>
+
+<% if (type==="post" ) { %>
+    <% if (result.rows.length===0) { %>
+        <div class="alert alert-warning" role="alert">
+            No Records Found!
+        </div>
+    <% } else { %>
+        <h3>Number of Records Found: <%= result.rows.length %>
+        </h3>
+        <div class="table-responsive-sm">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>State</th>
+                        <th>Sales YTD</th>
+                        <th>Prev Years Sales</th>
+                        <th class="d-print-none">
+                            <a class="btn btn-sm btn-success" href="/create">Create Customer</a>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% result.rows.forEach(cus=> { %>
+                        <tr>
+                            <td><%= cus.cusid %></td>
+                            <td><%= cus.cusfname %></td>
+                            <td><%= cus.cuslname %></td>
+                            <td><%= cus.cusstate %></td>
+                            <td><%= cus.cussalesytd %></td>
+                            <td><%= cus.cussalesprev %></td>
+                            <td class="d-print-none">
+                                <a class="btn btn-sm btn-warning" href="/edit/<%= cus.cusid %>">Edit</a>
+                                <a class="btn btn-sm btn-danger" href="/delete/<%= cus.cusid %>">Delete</a>
+                            </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+    <% } %>
+<% } %>
+
+<%- include("_footer") -%>

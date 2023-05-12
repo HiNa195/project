@@ -1,0 +1,51 @@
+<%- include("_header") -%>
+
+<h1>Customer Import</h1>
+<h3>Total number of records in the database: <%= totalRecords %></h3>
+<h3>Select a file with customers for Database Insert</h3>
+
+<form>
+    <input type="file" name="filename" required><p></p>
+    <div class="form-group row mb-3">
+        <label class="col-form-label col-sm-2"></label>
+        <div class="col-sm-10">
+            <button type="submit" class="btn btn-primary mb-3" id="importBtn">Import Customers</button>
+        </div>
+    </div>
+</form>
+<p id="result"></p>
+
+<script>
+    document.querySelector("form").addEventListener("submit", e => {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      const resultElement = document.getElementById("result");
+
+      fetch("/import", {
+        method: "POST",
+        body: formData
+      })
+      .then(response => response.json())
+.then(data => {
+  resultElement.innerText = "Wait for results";
+  setTimeout(() => {
+    if (data.message.substring(0,5) === "Error") {
+      resultElement.innerText = `${data.message}`
+    } else {
+      resultElement.innerText = data.message;
+    };
+    if (data.errors && data.errors.length > 0) {
+      resultElement.innerHTML += `<br><strong>Errors:</strong>`;
+      data.errors.forEach(err => {
+        resultElement.innerHTML += `<br>${err}`;
+      });
+    }
+  }, 2000);
+})
+        .catch(err => {
+            resultElement.textContent = `Error: ${err.message}`;
+        });
+    });
+    </script>
+
+<%- include("_footer") -%>
